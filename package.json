@@ -1,0 +1,28 @@
+{
+  "name": "create-expo-app",
+  "version": "5.0.0",
+  "description": "Compatibility wrapper for create-expo",
+  "license": "BSD-3-Clause",
+  "author": "Expo",
+  "homepage": "https://docs.expo.dev/more/create-expo/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/expo/create-expo-app-legacy.git"
+  },
+  "main": "./index.js",
+  "bin": {
+    "create-expo-app": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "create-expo": ">=5.0.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

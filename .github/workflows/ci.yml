@@ -1,0 +1,85 @@
+name: Package compatibility
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: npm 9 / Node 20 / Linux
+            os: ubuntu-24.04
+            node: '20.0.0'
+            npm: '9.9.4'
+            manager: npm
+          - name: npm 12 / Node 24 / Linux
+            os: ubuntu-24.04
+            node: '24'
+            npm: '12.0.2'
+            manager: npm
+          - name: npm 12 / Node 24 / macOS
+            os: macos-15
+            node: '24'
+            npm: '12.0.2'
+            manager: npm
+          - name: npm 12 / Node 24 / Windows
+            os: windows-2025
+            node: '24'
+            npm: '12.0.2'
+            manager: npm
+          - name: pnpm 10 / Node 24 / Linux
+            os: ubuntu-24.04
+            node: '24'
+            npm: '12.0.2'
+            manager: pnpm
+            manager_package: pnpm@10.33.0
+          - name: Yarn Classic / Node 24 / Linux
+            os: ubuntu-24.04
+            node: '24'
+            npm: '12.0.2'
+            manager: yarn
+            manager_package: yarn@1.22.22
+          - name: Yarn Berry / Node 24 / Linux
+            os: ubuntu-24.04
+            node: '24'
+            npm: '12.0.2'
+            manager: yarn
+            manager_package: '@yarnpkg/cli-dist@4.18.0'
+          - name: Bun / Node 24 / Linux
+            os: ubuntu-24.04
+            node: '24'
+            npm: '12.0.2'
+            manager: bun
+            bun: '1.4.2'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+          package-manager-cache: false
+      - name: Install npm
+        run: npm install --global --ignore-scripts npm@${{ matrix.npm }}
+      - name: Install package manager
+        if: matrix.manager_package
+        run: npm install --global --ignore-scripts --force "${{ matrix.manager_package }}"
+      - name: Install Bun
+        if: matrix.manager == 'bun'
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: ${{ matrix.bun }}
+      - name: Test packed package
+        run: npm test
+        env:
+          SHIM_TEST_PACKAGE_MANAGER: ${{ matrix.manager }}
