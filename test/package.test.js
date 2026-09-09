@@ -1,6 +1,8 @@
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
-const { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } = require('node:fs');
+const {
+  existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync,
+} = require('node:fs');
 const { createRequire } = require('node:module');
 const { tmpdir } = require('node:os');
 const path = require('node:path');
@@ -103,7 +105,11 @@ test('the packed package forwards to create-expo', async (t) => {
       name: 'expo-template-shim-test', version: '1.0.0', private: true,
     }));
     writeFileSync(path.join(templateRoot, 'App.js'), 'export default function App() {}\n');
-    const template = path.join(temporaryRoot, pack(templateRoot).filename);
+    const { filename } = pack(templateRoot);
+    renameSync(path.join(temporaryRoot, filename), path.join(templateRoot, filename));
+    // create-expo recognizes ./ as a local template; Windows drive prefixes are
+    // interpreted as package names. Keep a space in the portable relative path.
+    const template = `./local template/${filename}`;
     const projectName = 'generated-app';
     const output = passing(cli(projectName, '--template', template, '--no-install', '--yes'));
     const generatedRoot = path.join(temporaryRoot, projectName);
