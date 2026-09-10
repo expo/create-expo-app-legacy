@@ -7,11 +7,11 @@
   "homepage": "https://docs.expo.dev/more/create-expo/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/expo/create-expo-app-legacy.git"
+    "url": "git+https://github.com/expo/create-expo-app-legacy.git"
   },
   "main": "./index.js",
   "bin": {
-    "create-expo-app": "./index.js"
+    "create-expo-app": "index.js"
   },
   "files": [
     "index.js"
