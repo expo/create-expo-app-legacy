@@ -23,9 +23,9 @@ The runtime dependency is `create-expo >=5.0.1`. Version 5.0.1 includes support 
 npm 12's `npm pack --json` output. The range permits future major releases, which
 may change CLI behavior or Node.js requirements.
 
-This wrapper requires Node.js 20 or newer. The underlying `create-expo@5.0.1`
-fails during project creation on Node.js 18 because it uses the global `File`
-API, despite declaring a lower minimum in its package metadata.
+This wrapper requires Node.js 20 or newer, the minimum tested with
+`create-expo@5.0.1`. Follow the resolved `create-expo` version's Node.js
+requirements when they are higher.
 
 The dependency is resolved at installation time. npm can reuse an installed or
 cached copy without refreshing its dependencies, including when invoking
@@ -57,3 +57,6 @@ SHIM_TEST_PACKAGE_MANAGER=bun npm test
 CI covers npm 9 on the minimum Node.js version, npm 12 on Linux, macOS, and
 Windows, and pnpm 10, Yarn Classic, Yarn Berry, and Bun on Linux. Yarn Berry
 uses its `node-modules` linker in these tests.
+
+See [RELEASING.md](https://github.com/expo/create-expo-app-legacy/blob/main/RELEASING.md)
+for the one-time npm release procedure.

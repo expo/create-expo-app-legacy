@@ -16,6 +16,11 @@
   "files": [
     "index.js"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "shim"
+  },
   "scripts": {
     "test": "node --test"
   },
